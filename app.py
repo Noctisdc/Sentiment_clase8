@@ -1,6 +1,6 @@
 from textblob import TextBlob
 import streamlit as st
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 import json
 
 # ---------------------------------------------------------
@@ -217,11 +217,12 @@ text = st.text_input(
 )
 
 if text:
-    translator = Translator()
 
     try:
-        translation = translator.translate(text, src="es", dest="en")
-        trans_text = translation.text
+        trans_text = GoogleTranslator(
+            source="es",
+            target="en"
+        ).translate(text)
 
         blob = TextBlob(trans_text)
         polarity = round(blob.sentiment.polarity, 2)
@@ -231,10 +232,12 @@ if text:
             sentiment = "POSITIVO"
             css_class = "positive"
             description = "El texto presenta una orientación emocional favorable."
+
         elif polarity < 0:
             sentiment = "NEGATIVO"
             css_class = "negative"
             description = "El texto presenta una orientación emocional desfavorable."
+
         else:
             sentiment = "NEUTRAL"
             css_class = "neutral"
